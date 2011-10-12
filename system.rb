@@ -11,10 +11,10 @@ class System
         @state = initial_state
         @history = [initial_state]
       else
-        raise 'Invalid state'
+        raise StateError
       end
     else
-      raise 'Invalid rule'
+      raise RuleError
     end
   end
 
@@ -23,7 +23,7 @@ class System
       @state = new_state
       @history = [@state]
     else
-      raise 'Invalid state'
+      raise StateError
     end
   end
 
@@ -37,7 +37,7 @@ class System
       steps.times { ghost_state = @rule[ghost_state] }
       return ghost_state
     else
-      raise 'Invalid ghost state'
+      raise StateError
     end
   end
 
@@ -45,12 +45,12 @@ class System
     if is_valid_state?(ghost_state)
       return ghost_state == self.ghost_evolve(ghost_state) ? true : false
     else
-      raise 'Invalid ghost state'
+      raise StateError
     end
   end
 
   def fixed_points
-    fixed_points = @states.select { |s| is_fixed_point?(s) }.to_set
+    @fixed_points ||= @states.select { |s| is_fixed_point?(s) }.to_set
   end
 
   def is_valid_rule?(rule)
@@ -62,5 +62,11 @@ class System
     return @states.include?(state) ? true : false
   end
 
+end
+
+class StateError < StandardError
+end
+
+class RuleError < StandardError
 end
 
