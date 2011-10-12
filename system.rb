@@ -28,6 +28,14 @@ class System
     end
   end
 
+  def at_fixed_point?
+    if @state == self.evolve
+      true
+    else
+      false
+    end
+  end
+
   def is_valid?(rule)
     if (rule.is_a?(Hash) && rule.keys.to_set == rule.values.to_set)
       return true
