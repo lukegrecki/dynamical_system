@@ -3,10 +3,10 @@ require 'set'
 class System
   attr_reader :state, :states, :history
 
-  def initialize(rule, initial_state = nil)
-    if is_valid_rule?(rule)
+  def initialize(rule, initial_state)
+    if System.is_valid_rule?(rule)
       @rule = rule
-      @states = rule.keys.to_set
+      @states = rule.keys
       if is_valid_state?(initial_state)
         @state = initial_state
         @history = [initial_state]
@@ -27,72 +27,52 @@ class System
     end
   end
 
-  def evolve(steps = 1)
+  def evolve!(steps = 1, state = @state)
+    set_state(state)
     steps.times { @state = @rule[@state]; @history << @state }
     return @state
   end
 
-  def ghost_evolve(ghost_state = @state, steps = 1)
-    if is_valid_state?(ghost_state)
-      steps.times { ghost_state = @rule[ghost_state] }
-      return ghost_state
+  def evolve(steps = 1, state = @state)
+    if is_valid_state?(state)
+      steps.times { state = @rule[state] }
+      return state
     else
       raise StateError
     end
   end
 
-  def ghost_walk(start_state = @state)
-    if is_valid_state?(start_state)
-      ghost_state = start_state
-      visited_states = [ghost_state]
-      ghost_state = ghost_evolve(ghost_state)
-      until visited_states.index(ghost_state) do
-        visited_states << ghost_state
-        ghost_state = ghost_evolve(ghost_state)
-      end
-      visited_states << ghost_state
-      return visited_states
-    else
-      raise StateError
-    end
+  def orbit!(state = @state, steps = 1)
+    set_state(state)
+    orbit = [@state]
+    steps.times { @state = @rule[@state]; @history << @state; orbit << @state }
+    return orbit
   end
 
-  def is_fixed_point?(ghost_state = @state)
-    if is_valid_state?(ghost_state)
-      return ghost_state == ghost_evolve(ghost_state) ? true : false
+  def orbit(state = @state, steps = 1)
+    orbit = [state]
+    steps.times { state = @rule[state]; orbit << state }
+    return orbit
+  end
+
+  def is_fixed_point?(state = @state)
+    if is_valid_state?(state)
+      return state == evolve(1, state) ? true : false
     else
       raise StateError
     end
   end
 
   def fixed_points
-    @fixed_points ||= @states.select { |s| is_fixed_point?(s) }.to_set
+    @fixed_points ||= @states.select { |s| is_fixed_point?(s) }
   end
 
-  def is_invariant_set?(subset_of_states)
-    new_subset_of_states =
-      Array(subset_of_states).collect { |s| ghost_evolve(s) }.to_set
-    return new_subset_of_states == subset_of_states ? true : false
+  def is_invariant_set?(state_array)
+    new_state_array = state_array.map { |s| evolve(1, s) }
+    return new_state_array.to_set == state_array.to_set ? true : false
   end
 
-  def in_cycle?(start_state = @state)
-    if is_valid_state?(start_state)
-      ghost_state = start_state
-      visited_states = [ghost_state]
-      next_state = ghost_evolve(ghost_state)
-      until visited_states.index(next_state) do
-        visited_states << next_state
-        ghost_state = next_state
-        next_state = ghost_evolve(ghost_state)
-      end
-      last_state = next_state
-      return last_state == start_state ? true : false
-    else
-      raise StateError
-    end
-  end
-
-  def is_valid_rule?(rule)
+  def self.is_valid_rule?(rule)
     return (rule.is_a?(Hash) &&
             rule.values.to_set.subset?(rule.keys.to_set)) ? true : false
   end
@@ -101,6 +81,7 @@ class System
     return @states.include?(state) ? true : false
   end
 
+  alias :set_state :state=
 end
 
 class StateError < StandardError
