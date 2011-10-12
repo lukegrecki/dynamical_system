@@ -1,7 +1,7 @@
 require 'set'
 
 class System
-  attr_reader :state, :history
+  attr_reader :state, :states, :history
 
   def initialize(rule, initial_state = nil)
     if is_valid_rule?(rule)
@@ -43,7 +43,7 @@ class System
 
   def is_fixed_point?(ghost_state = @state)
     if is_valid_state?(ghost_state)
-      return ghost_state == self.ghost_evolve(ghost_state) ? true : false
+      return ghost_state == ghost_evolve(ghost_state) ? true : false
     else
       raise StateError
     end
@@ -51,6 +51,12 @@ class System
 
   def fixed_points
     @fixed_points ||= @states.select { |s| is_fixed_point?(s) }.to_set
+  end
+
+  def is_invariant_set?(subset_of_states)
+    new_subset_of_states =
+      Array(subset_of_states).collect { |s| ghost_evolve(s) }.to_set
+    return new_subset_of_states == subset_of_states ? true : false
   end
 
   def is_valid_rule?(rule)
