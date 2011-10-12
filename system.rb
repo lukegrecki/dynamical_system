@@ -53,30 +53,21 @@ class System
     @fixed_points ||= @states.select { |s| is_fixed_point?(s) }.to_set
   end
 
-  def find_cycle(start_state = @state)
+  def in_cycle?(start_state = @state)
     if is_valid_state?(start_state)
-      cycle = [start_state]
-      ghost_state = ghost_evolve(start_state)
-      while ghost_state != start_state
-        cycle << ghost_state
-        ghost_state = ghost_evolve(ghost_state)
+      ghost_state = start_state
+      visited_states = [ghost_state]
+      next_state = ghost_evolve(ghost_state)
+      until visited_states.index(next_state) do
+        visited_states << next_state
+        ghost_state = next_state
+        next_state = ghost_evolve(ghost_state)
       end
-      return cycle
+      last_state = next_state
+      return last_state == start_state ? true : false
     else
       raise StateError
     end
-  end
-
-  def find_all_cycles
-    cycles = []
-    unvisited_states = Array(@states)
-    until unvisited_states.empty? do
-      start_state = unvisited_states.sample
-      new_cycle = find_cycle(start_state)
-      cycles << new_cycle
-      unvisited_states -= new_cycle
-    end
-    return cycles
   end
 
   def is_invariant_set?(subset_of_states)
@@ -87,7 +78,7 @@ class System
 
   def is_valid_rule?(rule)
     return (rule.is_a?(Hash) &&
-            rule.keys.to_set == rule.values.to_set) ? true : false
+            rule.values.to_set.subset?(rule.keys.to_set)) ? true : false
   end
 
   def is_valid_state?(state)
