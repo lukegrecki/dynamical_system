@@ -53,6 +53,32 @@ class System
     @fixed_points ||= @states.select { |s| is_fixed_point?(s) }.to_set
   end
 
+  def find_cycle(start_state = @state)
+    if is_valid_state?(start_state)
+      cycle = [start_state]
+      ghost_state = ghost_evolve(start_state)
+      while ghost_state != start_state
+        cycle << ghost_state
+        ghost_state = ghost_evolve(ghost_state)
+      end
+      return cycle
+    else
+      raise StateError
+    end
+  end
+
+
+#  def cycles
+#    return @cycles if @cycles
+#    @cycles = []
+#    unvisited_states = Array(@states)
+#    until unvisited_states.empty?
+#      ghost_state = unvisited_states.sample
+
+#      unvisited_states.delete()
+#    end
+#  end
+
   def is_invariant_set?(subset_of_states)
     new_subset_of_states =
       Array(subset_of_states).collect { |s| ghost_evolve(s) }.to_set
