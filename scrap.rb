@@ -24,3 +24,14 @@
 #    return cycles
 #  end
 
+#  def cycles
+#    return @cycles if @cycles
+#    ghost_state = start_state
+#    visited_states = [ghost_state]
+#    next_state = ghost_evolve(ghost_state)
+#    until visited_states.index(next_state) do
+#      visited_states << next_state
+#      ghost_state = next_state
+#      next_state = ghost_evolve(ghost_state)
+#    end
+

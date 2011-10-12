@@ -41,6 +41,22 @@ class System
     end
   end
 
+  def ghost_walk(start_state = @state)
+    if is_valid_state?(start_state)
+      ghost_state = start_state
+      visited_states = [ghost_state]
+      ghost_state = ghost_evolve(ghost_state)
+      until visited_states.index(ghost_state) do
+        visited_states << ghost_state
+        ghost_state = ghost_evolve(ghost_state)
+      end
+      visited_states << ghost_state
+      return visited_states
+    else
+      raise StateError
+    end
+  end
+
   def is_fixed_point?(ghost_state = @state)
     if is_valid_state?(ghost_state)
       return ghost_state == ghost_evolve(ghost_state) ? true : false
@@ -51,6 +67,12 @@ class System
 
   def fixed_points
     @fixed_points ||= @states.select { |s| is_fixed_point?(s) }.to_set
+  end
+
+  def is_invariant_set?(subset_of_states)
+    new_subset_of_states =
+      Array(subset_of_states).collect { |s| ghost_evolve(s) }.to_set
+    return new_subset_of_states == subset_of_states ? true : false
   end
 
   def in_cycle?(start_state = @state)
@@ -68,12 +90,6 @@ class System
     else
       raise StateError
     end
-  end
-
-  def is_invariant_set?(subset_of_states)
-    new_subset_of_states =
-      Array(subset_of_states).collect { |s| ghost_evolve(s) }.to_set
-    return new_subset_of_states == subset_of_states ? true : false
   end
 
   def is_valid_rule?(rule)
