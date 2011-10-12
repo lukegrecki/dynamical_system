@@ -3,6 +3,15 @@ require 'set'
 class System
   attr_reader :state, :states, :history
 
+  def self.is_valid_rule?(rule)
+    return (rule.is_a?(Hash) &&
+            rule.values.to_set.subset?(rule.keys.to_set)) ? true : false
+  end
+
+  def is_valid_state?(state)
+    return @states.include?(state) ? true : false
+  end
+
   def initialize(rule, initial_state)
     if System.is_valid_rule?(rule)
       @rule = rule
@@ -70,15 +79,6 @@ class System
   def is_invariant_set?(state_array)
     new_state_array = state_array.map { |s| evolve(1, s) }
     return new_state_array.to_set == state_array.to_set ? true : false
-  end
-
-  def self.is_valid_rule?(rule)
-    return (rule.is_a?(Hash) &&
-            rule.values.to_set.subset?(rule.keys.to_set)) ? true : false
-  end
-
-  def is_valid_state?(state)
-    return @states.include?(state) ? true : false
   end
 
   alias :set_state :state=

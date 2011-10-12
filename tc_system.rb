@@ -3,74 +3,67 @@ require 'test/unit'
 
 class Test_System < Test::Unit::TestCase
 
-  def test_valid_initialization
-    rule = { :s1 => :s2, :s2 => :s1, :s3 => :s3 }
-    assert_instance_of(System, System.new(rule, :s1))
+  def setup
+    @rule = { :s1 => :s2, :s2 => :s1, :s3 => :s3 }
+    @sys = System.new(@rule, :s1)
   end
 
-  def test_invalid_rules
-    rule = 0 #not a Hash
-    assert_equal(System.is_valid_rule?(rule), false)
-
-    rule = { :s1 => :s2, :s3 => :s3 } #undefined on :s2
-    assert_equal(System.is_valid_rule?(rule), false)
+  def teardown
   end
 
-  def test_invalid_state
-    rule = { :s1 => :s2, :s2 => :s1, :s3 => :s3 }
-    sys = System.new(rule, :s1)
+  def test_initialization
+    assert_instance_of(System, System.new(@rule, :s1))
+  end
+
+  def test_is_valid_rule?
+    @rule = 0 #not a Hash
+    assert_equal(System.is_valid_rule?(@rule), false)
+
+    @rule = { :s1 => :s2, :s3 => :s3 } #undefined on :s2
+    assert_equal(System.is_valid_rule?(@rule), false)
+  end
+
+  def test_is_valid_state?
     state = 1 #not in state set
-    assert_equal(sys.is_valid_state?(state), false)
+    assert_equal(@sys.is_valid_state?(state), false)
   end
 
   def test_evolve!
-    rule = { :s1 => :s2, :s2 => :s1, :s3 => :s3 }
-    sys = System.new(rule, :s1)
-    assert_equal(sys.evolve!(2, :s2), :s2)
-    assert_equal(sys.state, :s2)
-    assert_equal(sys.history, [:s2, :s1, :s2])
+    assert_equal(@sys.evolve!(2, :s2), :s2)
+    assert_equal(@sys.state, :s2)
+    assert_equal(@sys.history, [:s2, :s1, :s2])
   end
 
   def test_evolve
-    rule = { :s1 => :s2, :s2 => :s1, :s3 => :s3 }
-    sys = System.new(rule, :s1)
-    assert_equal(sys.evolve(2, :s2), :s2)
-    assert_equal(sys.state, :s1)
+    assert_equal(@sys.evolve(2, :s2), :s2)
+    assert_equal(@sys.state, :s1)
   end
 
   def test_orbit!
-    rule = { :s1 => :s2, :s2 => :s1, :s3 => :s3 }
-    sys = System.new(rule, :s2)
-    assert_equal(sys.orbit!(:s1, 2), [:s1, :s2, :s1])
-    assert_equal(sys.state, :s1)
-    assert_equal(sys.history, [:s1, :s2, :s1])
+    assert_equal(@sys.orbit!(:s2, 2), [:s2, :s1, :s2])
+    assert_equal(@sys.state, :s2)
+    assert_equal(@sys.history, [:s2, :s1, :s2])
   end
 
   def test_orbit
-    rule = { :s1 => :s2, :s2 => :s1, :s3 => :s3 }
-    sys = System.new(rule, :s2)
-    assert_equal(sys.orbit(:s1, 2), [:s1, :s2, :s1])
-    assert_equal(sys.state, :s2)
+    assert_equal(@sys.orbit(:s2, 2), [:s2, :s1, :s2])
+    assert_equal(@sys.state, :s1)
   end
 
-  def test_is_fixed_point
-    rule = { :s1 => :s2, :s2 => :s1, :s3 => :s3 }
-    sys = System.new(rule, :s2)
-    assert_equal(sys.is_fixed_point?(:s1), false)
-    assert_equal(sys.is_fixed_point?(:s3), true)
+  def test_is_fixed_point?
+    assert_equal(@sys.is_fixed_point?(:s1), false)
+    assert_equal(@sys.is_fixed_point?(:s3), true)
   end
 
   def test_fixed_points
-    rule = { :s1 => :s2, :s2 => :s1, :s3 => :s3, :s4 => :s4 }
-    sys = System.new(rule, :s2)
-    assert_equal(sys.fixed_points.to_set, Set.new([:s3, :s4]))
+    @rule = { :s1 => :s2, :s2 => :s1, :s3 => :s3, :s4 => :s4 }
+    @sys = System.new(@rule, :s1)
+    assert_equal(@sys.fixed_points.to_set, Set.new([:s3, :s4]))
   end
 
-  def test_is_invariant_set
-    rule = { :s1 => :s2, :s2 => :s1, :s3 => :s3 }
-    sys = System.new(rule, :s2)
-    assert_equal(sys.is_invariant_set?([:s1, :s2]), true)
-    assert_equal(sys.is_invariant_set?([:s1, :s3]), false)
+  def test_is_invariant_set?
+    assert_equal(@sys.is_invariant_set?([:s1, :s2]), true)
+    assert_equal(@sys.is_invariant_set?([:s1, :s3]), false)
   end
 end
 
