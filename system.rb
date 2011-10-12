@@ -67,17 +67,17 @@ class System
     end
   end
 
-
-#  def cycles
-#    return @cycles if @cycles
-#    @cycles = []
-#    unvisited_states = Array(@states)
-#    until unvisited_states.empty?
-#      ghost_state = unvisited_states.sample
-
-#      unvisited_states.delete()
-#    end
-#  end
+  def find_all_cycles
+    cycles = []
+    unvisited_states = Array(@states)
+    until unvisited_states.empty? do
+      start_state = unvisited_states.sample
+      new_cycle = find_cycle(start_state)
+      cycles << new_cycle
+      unvisited_states -= new_cycle
+    end
+    return cycles
+  end
 
   def is_invariant_set?(subset_of_states)
     new_subset_of_states =
