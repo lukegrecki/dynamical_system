@@ -12,6 +12,11 @@ class System
     return @states.include?(state) ? true : false
   end
 
+  def inspect
+    puts "state : #{@state}\n" + "history : #{history}\n" +
+         "rule : #{@rule}\n" + "states : #{@states}"
+  end
+
   def initialize(rule, initial_state)
     if System.is_valid_rule?(rule)
       @rule = rule
@@ -37,7 +42,7 @@ class System
   end
 
   def evolve!(steps = 1, state = @state)
-    set_state(state)
+    set_state(state) if state != @state
     steps.times { @state = @rule[@state]; @history << @state }
     return @state
   end
@@ -51,14 +56,14 @@ class System
     end
   end
 
-  def orbit!(state = @state, steps = 1)
-    set_state(state)
+  def orbit!(steps = 1, state = @state)
+    set_state(state) if state != @state
     orbit = [@state]
     steps.times { @state = @rule[@state]; @history << @state; orbit << @state }
     return orbit
   end
 
-  def orbit(state = @state, steps = 1)
+  def orbit(steps = 1, state = @state)
     orbit = [state]
     steps.times { state = @rule[state]; orbit << state }
     return orbit
@@ -84,9 +89,6 @@ class System
   alias :set_state :state=
 end
 
-class StateError < StandardError
-end
-
-class RuleError < StandardError
-end
+class StateError < StandardError; end
+class RuleError < StandardError; end
 

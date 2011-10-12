@@ -40,13 +40,13 @@ class Test_System < Test::Unit::TestCase
   end
 
   def test_orbit!
-    assert_equal(@sys.orbit!(:s2, 2), [:s2, :s1, :s2])
+    assert_equal(@sys.orbit!(2, :s2), [:s2, :s1, :s2])
     assert_equal(@sys.state, :s2)
     assert_equal(@sys.history, [:s2, :s1, :s2])
   end
 
   def test_orbit
-    assert_equal(@sys.orbit(:s2, 2), [:s2, :s1, :s2])
+    assert_equal(@sys.orbit(2, :s2), [:s2, :s1, :s2])
     assert_equal(@sys.state, :s1)
   end
 
