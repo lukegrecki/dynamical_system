@@ -8,6 +8,15 @@ class System
             rule.values.to_set.subset?(rule.keys.to_set)) ? true : false
   end
 
+  def self.random(number_of_states)
+    rule = {}
+    (1..number_of_states).each do |s|
+      r = rand(number_of_states) + 1
+      rule.merge!({ "s#{s}".to_sym => "s#{r}".to_sym })
+    end
+    return self.new(rule, :s1)
+  end
+
   def is_valid_state?(state)
     return @states.include?(state) ? true : false
   end
