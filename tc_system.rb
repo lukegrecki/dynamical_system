@@ -72,13 +72,13 @@ class Test_System < Test::Unit::TestCase
     assert_equal(@sys.is_invariant_set?([:s1, :s3]), false)
   end
 
-  def test_is_conservative?
-    assert_equal(@sys.is_conservative?, true)
+  def test_is_bijective?
+    assert_equal(@sys.is_bijective?, true)
 
     @rule_2 = { :s1 => :s1, :s2 => :s1 }
     @sys_2 = System.new(@rule_2, :s1)
     puts @rule_2.values.size
-    assert_equal(@sys_2.is_conservative?, false)
+    assert_equal(@sys_2.is_bijective?, false)
   end
 end
 

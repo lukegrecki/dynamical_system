@@ -95,7 +95,7 @@ class System
     return new_state_array.to_set == state_array.to_set ? true : false
   end
 
-  def is_conservative?
+  def is_bijective?
     return @states.size == @rule.values.uniq.size
   end
 
