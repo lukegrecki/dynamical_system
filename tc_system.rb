@@ -1,4 +1,4 @@
-load './system.rb'
+require_relative 'system'
 require 'test/unit'
 
 class Test_System < Test::Unit::TestCase
@@ -25,13 +25,13 @@ class Test_System < Test::Unit::TestCase
     assert_equal(5, random_sys.states.size)
   end
 
-  def test_initialization
-    assert_instance_of(System, System.new(@rule, :s1))
-  end
-
   def test_is_valid_state?
     state = 1 #not in state set
     assert_equal(@sys.is_valid_state?(state), false)
+  end
+
+  def test_initialization
+    assert_instance_of(System, System.new(@rule, :s1))
   end
 
   def test_evolve!

@@ -44,7 +44,7 @@ class System
   def state=(new_state)
     if is_valid_state?(new_state)
       @state = new_state
-      @history = [@state]
+      @history = [@state] #resets history
     else
       raise StateError
     end
