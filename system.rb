@@ -78,6 +78,17 @@ class System
     return path
   end
 
+  def forward_orbit(state = @state)
+    forward_orbit = [state]
+    new_state = @rule[state]
+    until forward_orbit.include?(new_state) do
+      forward_orbit << new_state
+      new_state = @rule[new_state]
+    end
+    forward_orbit << new_state #needed to see the cycle
+    return forward_orbit
+  end
+
   def is_fixed_point?(state = @state)
     if is_valid_state?(state)
       return state == evolve(1, state) ? true : false
