@@ -65,17 +65,17 @@ class System
     end
   end
 
-  def orbit!(steps = 1, state = @state)
+  def path!(steps = 1, state = @state)
     set_state(state) if state != @state
-    orbit = [@state]
-    steps.times { @state = @rule[@state]; @history << @state; orbit << @state }
-    return orbit
+    path = [@state]
+    steps.times { @state = @rule[@state]; @history << @state; path << @state }
+    return path
   end
 
-  def orbit(steps = 1, state = @state)
-    orbit = [state]
-    steps.times { state = @rule[state]; orbit << state }
-    return orbit
+  def path(steps = 1, state = @state)
+    path = [state]
+    steps.times { state = @rule[state]; path << state }
+    return path
   end
 
   def is_fixed_point?(state = @state)

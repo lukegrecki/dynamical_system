@@ -22,7 +22,7 @@ sys.is_invariant_set?([:s1, :s2]) # => true
 rule = { :s1 => :s3, :s2 => :s3, :s3 => :s3 }
 sys = System.new(rule, :s1)
 
-sys.orbit!(3)            # => [:s1, :s3, :s3, :s3]
+sys.path!(3)            # => [:s1, :s3, :s3, :s3]
 sys.is_fixed_point?(:s3) # => true
 sys.is_bijective?        # => false
 

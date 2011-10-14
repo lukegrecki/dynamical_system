@@ -1,4 +1,4 @@
-require_relative 'system'
+require_relative '../system'
 require 'test/unit'
 
 class Test_System < Test::Unit::TestCase
@@ -45,14 +45,14 @@ class Test_System < Test::Unit::TestCase
     assert_equal(@sys.state, :s1)
   end
 
-  def test_orbit!
-    assert_equal(@sys.orbit!(2, :s2), [:s2, :s1, :s2])
+  def test_path!
+    assert_equal(@sys.path!(2, :s2), [:s2, :s1, :s2])
     assert_equal(@sys.state, :s2)
     assert_equal(@sys.history, [:s2, :s1, :s2])
   end
 
-  def test_orbit
-    assert_equal(@sys.orbit(2, :s2), [:s2, :s1, :s2])
+  def test_path
+    assert_equal(@sys.path(2, :s2), [:s2, :s1, :s2])
     assert_equal(@sys.state, :s1)
   end
 
