@@ -66,6 +66,11 @@ class Test_System < Test::Unit::TestCase
     assert_equal(@sys.backward_orbit(:s3), [:s3, :s3])
   end
 
+  def test_orbit
+    assert_equal(@sys.orbit, [:s1, :s2, :s1, :s2, :s1])
+    assert_equal(@sys.orbit(:s3), [:s3, :s3, :s3])
+  end
+
   def test_is_fixed_point?
     assert_equal(@sys.is_fixed_point?(:s1), false)
     assert_equal(@sys.is_fixed_point?(:s3), true)

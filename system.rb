@@ -90,18 +90,20 @@ class System
   end
 
   def backward_orbit(state = @state)
-    if is_bijective?
-      backward_orbit = [state]
-      old_state = @rule.key(state)
-      until backward_orbit.include?(old_state) do
-        backward_orbit << old_state
-        old_state = @rule.key(old_state)
-      end
-      backward_orbit << old_state #needed to see the cycle
-      return backward_orbit
-    else
-      raise RuleError, "Is not bijective"
+    raise RuleError, "Is not bijective" unless is_bijective?
+    backward_orbit = [state]
+    old_state = @rule.key(state)
+    until backward_orbit.include?(old_state) do
+      backward_orbit << old_state
+      old_state = @rule.key(old_state)
     end
+    backward_orbit << old_state #needed to see the cycle
+    return backward_orbit
+  end
+
+  def orbit(state = @state)
+    raise RuleError, "Is not bijective" unless is_bijective?
+    return backward_orbit(state)[0...-1] += (forward_orbit(state))
   end
 
   def is_fixed_point?(state = @state)
