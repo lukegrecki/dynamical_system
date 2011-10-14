@@ -27,7 +27,7 @@ class Test_System < Test::Unit::TestCase
 
   def test_is_valid_state?
     state = 1 #not in state set
-    assert_equal(@sys.is_valid_state?(state), false)
+    assert_raise(StateError) { @sys.is_valid_state?(state) }
   end
 
   def test_initialization

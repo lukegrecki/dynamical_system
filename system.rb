@@ -18,7 +18,11 @@ class System
   end
 
   def is_valid_state?(state)
-    return @states.include?(state) ? true : false
+    if @states.include?(state)
+      return true
+    else
+      raise StateError
+    end
   end
 
   def inspect
@@ -30,24 +34,19 @@ class System
     if System.is_valid_rule?(rule)
       @rule = rule
       @states = rule.keys
-      if is_valid_state?(initial_state)
-        @state = initial_state
-        @history = [initial_state]
-      else
-        raise StateError
-      end
+
+      is_valid_state?(initial_state)
+      @state = initial_state
+      @history = [initial_state]
     else
       raise RuleError
     end
   end
 
   def state=(new_state)
-    if is_valid_state?(new_state)
-      @state = new_state
-      @history = [@state] #resets history
-    else
-      raise StateError
-    end
+    is_valid_state?(new_state)
+    @state = new_state
+    @history = [@state] #resets history
   end
 
   def evolve!(steps = 1, state = @state)
@@ -57,12 +56,9 @@ class System
   end
 
   def evolve(steps = 1, state = @state)
-    if is_valid_state?(state)
-      steps.times { state = @rule[state] }
-      return state
-    else
-      raise StateError
-    end
+    is_valid_state?(state)
+    steps.times { state = @rule[state] }
+    return state
   end
 
   def path!(steps = 1, state = @state)
@@ -107,11 +103,8 @@ class System
   end
 
   def is_fixed_point?(state = @state)
-    if is_valid_state?(state)
-      return state == evolve(1, state) ? true : false
-    else
-      raise StateError
-    end
+    is_valid_state?(state)
+    return state == evolve(1, state) ? true : false
   end
 
   def fixed_points
