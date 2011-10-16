@@ -1,6 +1,6 @@
 require 'set'
 
-class System
+class DynamicalSystem
   attr_reader :state, :states, :history
 
   def self.is_valid_rule?(rule)
@@ -27,7 +27,7 @@ class System
   end
 
   def initialize(rule, initial_state)
-    if System.is_valid_rule?(rule)
+    if DynamicalSystem.is_valid_rule?(rule)
       @rule = rule
       @states = rule.keys
       if is_valid_state?(initial_state)
