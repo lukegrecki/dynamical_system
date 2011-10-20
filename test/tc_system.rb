@@ -63,10 +63,17 @@ class Test_System < Test::Unit::TestCase
     assert_equal(@sys.orbit(:s3), [:s3, :s3, :s3])
   end
 
-  def lasso
-    @rule.merge({ :s2 => :s4, :s4 => :s2 })
-    @sys = System.new(@rule)
+  def test_lasso
+    @rule.merge!({ :s2 => :s4, :s4 => :s2 })
+    @sys = System.new(@rule, :s1)
     assert_equal(@sys.lasso(:s1), [:s1, :s2, :s4, :s2])
+  end
+
+  def test_cycle_from_lasso
+    @rule.merge!({ :s2 => :s4, :s4 => :s2 })
+    @sys = System.new(@rule, :s1)
+    lasso = @sys.lasso(:s1)
+    assert_equal([:s2, :s4], @sys.cycle_from_lasso(lasso))
   end
 
   def test_cycles

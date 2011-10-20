@@ -101,6 +101,10 @@ class System
     return lasso
   end
 
+  def cycle_from_lasso(lasso)
+    return lasso[lasso.index(lasso.last)...-1]
+  end
+
   def cycles
   end
 
