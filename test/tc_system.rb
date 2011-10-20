@@ -77,7 +77,8 @@ class Test_System < Test::Unit::TestCase
   end
 
   def test_cycles
-    assert_equal([[:s1, :s2], [:s3]], @sys.cycles)
+    assert_equal(true, [[:s1, :s2], [:s3]].to_set == @sys.cycles.to_set || \
+                       [[:s2, :s1], [:s3]].to_set == @sys.cycles.to_set)
   end
 
   def test_is_fixed_point?

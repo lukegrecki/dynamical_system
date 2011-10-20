@@ -106,6 +106,17 @@ class System
   end
 
   def cycles
+    return @cycles if @cycles
+    @cycles = []
+    visited_states = []
+    states_array = Array(@states)
+    until visited_states.size == @states.size do
+      start_state = (states_array - visited_states).sample
+      lasso = lasso(start_state)
+      @cycles << cycle_from_lasso(lasso)
+      visited_states |= lasso
+    end
+    return @cycles
   end
 
   def is_fixed_point?(state = @state)
