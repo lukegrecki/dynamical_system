@@ -90,6 +90,20 @@ class System
     return backward_orbit(state)[0...-1] += (forward_orbit(state))
   end
 
+  def lasso(state = @state)
+    lasso = [state]
+    new_state = @rule[state]
+    until lasso.include?(new_state) do
+      lasso << new_state
+      new_state = @rule[new_state]
+    end
+    lasso << new_state
+    return lasso
+  end
+
+  def cycles
+  end
+
   def is_fixed_point?(state = @state)
     return state == evolve(1, state) ? true : false
   end

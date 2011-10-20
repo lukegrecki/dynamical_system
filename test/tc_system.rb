@@ -8,9 +8,6 @@ class Test_System < Test::Unit::TestCase
     @sys = System.new(@rule, :s1)
   end
 
-  def teardown
-  end
-
   def test_is_valid_rule?
     @rule = 0 #not a Hash
     assert_equal(System.is_valid_rule?(@rule), false)
@@ -64,6 +61,16 @@ class Test_System < Test::Unit::TestCase
   def test_orbit
     assert_equal(@sys.orbit, [:s1, :s2, :s1, :s2, :s1])
     assert_equal(@sys.orbit(:s3), [:s3, :s3, :s3])
+  end
+
+  def lasso
+    @rule.merge({ :s2 => :s4, :s4 => :s2 })
+    @sys = System.new(@rule)
+    assert_equal(@sys.lasso(:s1), [:s1, :s2, :s4, :s2])
+  end
+
+  def test_cycles
+    assert_equal([[:s1, :s2], [:s3]], @sys.cycles)
   end
 
   def test_is_fixed_point?
