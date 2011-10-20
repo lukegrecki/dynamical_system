@@ -8,10 +8,6 @@ class TestDynamicalSystemInstance < Test::Unit::TestCase
     @sys = DynamicalSystem.new(@rule, :s1)
   end
 
-  def test_initialization
-    assert_instance_of(DynamicalSystem, DynamicalSystem.new(@rule, :s1))
-  end
-
   def test_evolve!
     assert_equal(@sys.evolve!(2, :s2), :s2)
     assert_equal(@sys.state, :s2)
@@ -36,7 +32,7 @@ class TestDynamicalSystemInstance < Test::Unit::TestCase
 
   def test_forward_orbit
     @rule.merge!({ :s2 => :s4, :s4 => :s2 })
-    @sys = System.new(@rule, :s1)
+    @sys = DynamicalSystem.new(@rule, :s1)
     assert_equal(@sys.forward_orbit(:s1), [:s1, :s2, :s4, :s2])
   end
 
@@ -52,14 +48,14 @@ class TestDynamicalSystemInstance < Test::Unit::TestCase
 
   def test_cycle_from_forward_orbit
     @rule.merge!({ :s2 => :s4, :s4 => :s2 })
-    @sys = System.new(@rule, :s1)
+    @sys = DynamicalSystem.new(@rule, :s1)
     forward_orbit = @sys.forward_orbit(:s1)
     assert_equal([:s2, :s4], @sys.cycle_from_forward_orbit(forward_orbit))
   end
 
   def test_cycles
     @rule.merge!({ :s2 => :s4, :s4 => :s2 })
-    @sys = System.new(@rule, :s1)
+    @sys = DynamicalSystem.new(@rule, :s1)
     assert_equal(true, [[:s2, :s4], [:s3]].to_set == @sys.cycles.to_set || \
                        [[:s4, :s2], [:s3]].to_set == @sys.cycles.to_set)
   end

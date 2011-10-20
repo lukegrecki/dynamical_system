@@ -8,7 +8,8 @@ class TestDynamicalSystemClass < Test::Unit::TestCase
     @sys = DynamicalSystem.new(@rule, :s1)
   end
 
-  def teardown
+  def test_initialization
+    assert_instance_of(DynamicalSystem, DynamicalSystem.new(@rule, :s1))
   end
 
   def test_is_valid_rule?
