@@ -90,19 +90,8 @@ class System
     return backward_orbit(state)[0...-1] += (forward_orbit(state))
   end
 
-  def lasso(state = @state)
-    lasso = [state]
-    new_state = @rule[state]
-    until lasso.include?(new_state) do
-      lasso << new_state
-      new_state = @rule[new_state]
-    end
-    lasso << new_state
-    return lasso
-  end
-
-  def cycle_from_lasso(lasso)
-    return lasso[lasso.index(lasso.last)...-1]
+  def cycle_from_forward_orbit(forward_orbit)
+    return forward_orbit[forward_orbit.index(forward_orbit.last)...-1]
   end
 
   def cycles
@@ -112,9 +101,12 @@ class System
     states_array = Array(@states)
     until visited_states.size == @states.size do
       start_state = (states_array - visited_states).sample
-      lasso = lasso(start_state)
-      @cycles << cycle_from_lasso(lasso)
-      visited_states |= lasso
+      forward_orbit = forward_orbit(start_state)
+      cycle = cycle_from_forward_orbit(forward_orbit)
+      cycle_set = cycle.to_set
+      cycle_sets = @cycles.map { |c| c.to_set }
+      @cycles << cycle unless cycle_sets.include?(cycle_set)
+      visited_states |= forward_orbit
     end
     return @cycles
   end

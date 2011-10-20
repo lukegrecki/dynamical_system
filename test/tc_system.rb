@@ -49,8 +49,9 @@ class Test_System < Test::Unit::TestCase
   end
 
   def test_forward_orbit
-    assert_equal(@sys.forward_orbit, [:s1, :s2, :s1])
-    assert_equal(@sys.forward_orbit(:s3), [:s3, :s3])
+    @rule.merge!({ :s2 => :s4, :s4 => :s2 })
+    @sys = System.new(@rule, :s1)
+    assert_equal(@sys.forward_orbit(:s1), [:s1, :s2, :s4, :s2])
   end
 
   def test_backward_orbit
@@ -63,22 +64,18 @@ class Test_System < Test::Unit::TestCase
     assert_equal(@sys.orbit(:s3), [:s3, :s3, :s3])
   end
 
-  def test_lasso
+  def test_cycle_from_forward_orbit
     @rule.merge!({ :s2 => :s4, :s4 => :s2 })
     @sys = System.new(@rule, :s1)
-    assert_equal(@sys.lasso(:s1), [:s1, :s2, :s4, :s2])
-  end
-
-  def test_cycle_from_lasso
-    @rule.merge!({ :s2 => :s4, :s4 => :s2 })
-    @sys = System.new(@rule, :s1)
-    lasso = @sys.lasso(:s1)
-    assert_equal([:s2, :s4], @sys.cycle_from_lasso(lasso))
+    forward_orbit = @sys.forward_orbit(:s1)
+    assert_equal([:s2, :s4], @sys.cycle_from_forward_orbit(forward_orbit))
   end
 
   def test_cycles
-    assert_equal(true, [[:s1, :s2], [:s3]].to_set == @sys.cycles.to_set || \
-                       [[:s2, :s1], [:s3]].to_set == @sys.cycles.to_set)
+    @rule.merge!({ :s2 => :s4, :s4 => :s2 })
+    @sys = System.new(@rule, :s1)
+    assert_equal(true, [[:s2, :s4], [:s3]].to_set == @sys.cycles.to_set || \
+                       [[:s4, :s2], [:s3]].to_set == @sys.cycles.to_set)
   end
 
   def test_is_fixed_point?
