@@ -13,8 +13,8 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "black_tao"
-  gem.homepage = "http://github.com/lukegrecki/black_tao"
+  gem.name = "dynamical_system"
+  gem.homepage = "http://github.com/lukegrecki/dynamical_system"
   gem.license = "MIT"
   gem.summary = "A simple ruby library for discrete dynamical systems"
   gem.description = "Define simple dynamical systems, evolve them, and calculate properties."
