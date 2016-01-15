@@ -1,7 +1,7 @@
 require_relative '../dynamical_system'
-require 'test/unit'
+require 'minitest/autorun'
 
-class TestDynamicalSystemClass < Test::Unit::TestCase
+class TestDynamicalSystemClass < Minitest::Test
 
   def setup
     @rule = { :s1 => :s2, :s2 => :s1, :s3 => :s3 }
