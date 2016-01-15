@@ -81,7 +81,6 @@ class TestDynamicalSystemInstance < Minitest::Test
 
     @rule_2 = { :s1 => :s1, :s2 => :s1 }
     @sys_2 = DynamicalSystem.new(@rule_2, :s1)
-    puts @rule_2.values.size
     assert_equal(@sys_2.is_bijective?, false)
   end
 end
