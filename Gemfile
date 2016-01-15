@@ -1,4 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.2.2'
 
-gem 'minitest'
+group :development do
+  gem 'minitest'
+  gem 'jeweler'
+end

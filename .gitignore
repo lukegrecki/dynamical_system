@@ -1,0 +1,5 @@
+# bundler
+.bundle
+
+# jeweler generated
+pkg
