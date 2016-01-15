@@ -5,7 +5,7 @@ The essence of each system is a rule (given as a hash) that determines state tra
 
     require_relative 'dynamical_system'
 
-    # A cyclic system with 3 states
+### A cyclic system with 3 states
 
     rule = { :s1 => :s2, :s2 => :s3, :s3 => :s1 }
     sys = DynamicalSystem.new(rule, :s1)
@@ -14,15 +14,15 @@ The essence of each system is a rule (given as a hash) that determines state tra
     sys.evolve!(6)  # => :s1
     sys.history     # => [:s1, :s2, :s3, :s1, :s2, :s3, :s1]
 
-    # A system with a cycle and a fixed point
+### A system with a cycle and a fixed point
 
     rule = { :s1 => :s2, :s2 => :s1, :s3 => :s3 }
     sys = DynamicalSystem.new(rule, :s1)
 
     sys.fixed_points                  # => [:s3]
     sys.is_invariant_set?([:s1, :s2]) # => true
-
-    # A system with a single attractor
+    
+### A system with a single attractor
 
     rule = { :s1 => :s3, :s2 => :s3, :s3 => :s3 }
     sys = DynamicalSystem.new(rule, :s1)
@@ -31,7 +31,7 @@ The essence of each system is a rule (given as a hash) that determines state tra
     sys.is_fixed_point?(:s3) # => true
     sys.is_bijective?        # => false
 
-    # A random system with 5 states
+### A random system with 5 states
 
     sys = DynamicalSystem.random(5)
     sys.states.size # => 5
